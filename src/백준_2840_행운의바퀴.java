@@ -1,39 +1,43 @@
 import java.util.*;
 
-public class 백준_2346_풍선터뜨리기 {
+public class 백준_2840_행운의바퀴 {
 
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
 
-    int N = sc.nextInt();
+    Deque<String> deque = new ArrayDeque<>();
     StringBuilder sb = new StringBuilder();
-    Deque<Integer> deque = new ArrayDeque<>();
-    Map<Integer, Integer> numMap = new HashMap<>();
 
-    for(int i = 0; i < N; i++) {
-      deque.add(i + 1);
-      numMap.put(i + 1, sc.nextInt());
-    }
+    int N = sc.nextInt();
+    int K = sc.nextInt();
 
-    sb.append(1).append(" ");
-    int move = numMap.get(1);
-    deque.removeFirst();
+    for(int i = 0; i < N; i++) deque.add("?");
 
-    for(int i = 0; i < N - 1; i++) {
-      if(move > 0) {
-        for (int j = 0; j < move - 1; j++)
-          deque.offerLast(deque.pollFirst());
-      } else {
-        move = move * -1;
-        for (int j = 0; j < move; j++)
-          deque.offerFirst(deque.pollLast());
+    for(int i = 0; i < K; i++) {
+      int num = sc.nextInt();
+      String alp = sc.next();
+
+      for(int j = 0; j < num; j++) deque.offerFirst(deque.pollLast());
+
+
+      if(!deque.getFirst().equals("?") && !deque.getFirst().equals(alp)) {
+        sb.append("!");
+        break;
       }
 
-      move = numMap.get(deque.getFirst());
-      sb.append(deque.pollFirst()).append(" ");
+      if(!deque.getFirst().equals(alp) && deque.contains(alp)) {
+        sb.append("!");
+        break;
+      }
 
+      deque.removeFirst();
+      deque.offerFirst(alp);
     }
 
-    System.out.println(sb.toString());
+    if(!sb.toString().equals("!")) {
+      for (int i = 0; i < deque.size(); i++) System.out.print(deque.toArray()[i]);
+    } else {
+      System.out.println(sb.toString());
+    }
   }
 }
