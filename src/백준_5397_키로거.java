@@ -1,47 +1,50 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
 
 public class 백준_5397_키로거 {
 
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    Deque<Character> deque = new ArrayDeque<>();
-    int cnt = sc.nextInt();
+  public static void main(String[] args) throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+    Stack<String> stack;
+    Stack<String> stackTemp;
+
+    StringBuilder sb;
+
+    int cnt = Integer.parseInt(br.readLine());
+    String[] commArray = new String[cnt];
+
+    for(int i = 0; i < cnt; i++) commArray[i] = br.readLine();
 
     for(int i = 0; i < cnt; i++) {
-      String comm = sc.next();
-      System.out.println(comm);
-      int cur = 0;
+      stack = new Stack<>();
+      stackTemp = new Stack<>();
+      sb = new StringBuilder();
+      String comm = commArray[i];
 
-      for(char com : comm.toCharArray()) {
-
-        if(com == '<') {
-          if(cur > 0) {
-            cur--;
-            deque.offerLast(deque.pollFirst());
+      for(String str : comm.split("")) {
+        if(str.equals("<")) {
+          if(!stack.isEmpty()) {
+            stackTemp.push(stack.pop());
           }
-        } else if(com == '>') {
-          if(cur < deque.size()) {
-            cur++;
-            deque.offerFirst(deque.pollLast());
+        } else if(str.equals(">")) {
+          if(!stackTemp.isEmpty()) {
+            stack.push(stackTemp.pop());
           }
-        } else if(com == '-') {
-          if(cur > 0) {
-            cur--;
-            deque.removeFirst();
+        } else if(str.equals("-")) {
+          if(!stack.isEmpty()) {
+            stack.pop();
           }
         } else {
-          cur++;
-          deque.offerFirst(com);
+          stack.push(str);
         }
-        //System.out.println("====> com : " + com + " / cur : " + cur + " / deque : " + deque.toString());
       }
 
-      for(int j = 0; j < cur; j++) deque.offerLast(deque.pollFirst());
-
-      int print = deque.size();
-      for(int j = 0; j < print; j++) System.out.print(deque.pollLast());
+      while(!stack.isEmpty()) stackTemp.push(stack.pop());
+      while(!stackTemp.isEmpty()) sb.append(stackTemp.pop());
+      System.out.println(sb.toString());
     }
   }
 }
