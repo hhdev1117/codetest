@@ -1,47 +1,46 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
-public class 백준_9012_괄호 {
+public class 백준_2805_나무자르기 {
 
   public static void main(String[] args) throws Exception {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    Stack<Character> stack;
 
-    List<String> textList = new ArrayList<>();
-    int T = Integer.parseInt(br.readLine());
-    for(int i = 0; i < T; i++) textList.add(br.readLine());
+    String[] nm = br.readLine().split(" ");
+    String[] tree = br.readLine().split(" ");
 
-    for(int i = 0; i < T; i++) {
-      stack = new Stack<>();
-      String text = textList.get(i);
-
-      for(int j = 0; j < text.length(); j++) {
-        char c = text.charAt(j);
-
-        if(c == '(') {
-          stack.push(c);
-        } else {
-          if(!stack.isEmpty()) {
-            stack.pop();
-          } else {
-            System.out.println("NO");
-            break;
-          }
-        }
-
-        if(j >= text.length() - 1) {
-          if(stack.isEmpty()) {
-            System.out.println("YES");
-          } else {
-            System.out.println("NO");
-          }
-        }
-      }
+    long max = 0;
+    long answer = 0;
+    for(int i = 0; i < tree.length; i++) {
+      long treeHigh = Integer.parseInt(tree[i]);
+      if(treeHigh > max) max = treeHigh;
     }
 
+    int N = Integer.parseInt(nm[0]);
+    int M = Integer.parseInt(nm[1]);
+
+    while(true) {
+      long treeHigh = (max + answer) / 2;
+
+      if(getTreeCut(treeHigh, tree) >= M) {
+        answer = treeHigh;
+      } else {
+        max = treeHigh;
+      }
+
+      if(max - 1 == answer) break;
+    }
+
+    System.out.println(answer);
+  }
+
+  public static long getTreeCut(long treeHigh, String[] tree) {
+    long treeCut = 0;
+
+    for(int i = 0; i < tree.length; i++) {
+      treeCut += Integer.parseInt(tree[i]) - treeHigh > 0 ? Integer.parseInt(tree[i]) - treeHigh : 0;
+    }
+
+    return treeCut;
   }
 }
